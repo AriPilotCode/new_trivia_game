@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="pexels-lexx.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .login-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            color: #fff;
+            width: 300px;
+            text-align: center;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: #ff0000;
+        }
+
+        .register-link {
+            display: block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>Register</h1>
+            <form id="register-form" action="{{ url_for('register') }}" method="post">
+                <label for="register-username">Username:</label>
+                <input type="text" id="register-username" name="username" required><br>
+                <label for="register-password">Password:</label>
+                <input type="password" id="register-password" name="password" required><br>
+                <button type="submit">Register</button>
+            </form>
+            <p id="message" class="hidden"></p> <!-- Message element for displaying errors -->
+            <a href="{{ url_for('login') }}" class="register-link">Already have an account? Login here</a>
+        </div>
+    </div>
+    <script>
+     document.getElementById('register-form').addEventListener('submit', async function (event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        const username = document.getElementById('register-username').value;
+        const password = document.getElementById('register-password').value;
+        const messageElement = document.getElementById('message');
+
+        try {
+            const response = await fetch('{{ url_for("register") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Redirect to login page if registration is successful
+                window.location.href = "{{ url_for('login') }}";
+            } else {
+                // Display the error message from the backend if registration fails
+                messageElement.textContent = data.message;
+                messageElement.classList.remove('hidden');
+            }
+        } catch (error) {
+            // Handle network or other unexpected errors
+            console.error('Error:', error);
+
+            // Check if the error response has a message from the backend
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+            if (error.response && error.response.json) {
+                const data = await error.response.json();
+                if (data.message) {
+                    errorMessage = `An unexpected error occurred: ${data.message}. Please try again.`;
+                }
+            }
+
+            messageElement.textContent = errorMessage;
+            messageElement.classList.remove('hidden');
+        }
+    });
+
+    </script>
+</body>
+</html>

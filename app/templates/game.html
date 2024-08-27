@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="pexels-lexx.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            text-align: center;
+        }
+
+        .game-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .game-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .game-button:hover {
+            background-color: #0056b3;
+        }
+
+        button[onclick="getQuestion()"],
+        button[onclick="getScore()"],
+        button[onclick="logout()"] {
+            background-color: purple;
+        }
+
+        button[onclick="getQuestion()"]:hover,
+        button[onclick="getScore()"]:hover,
+        button[onclick="logout()"]:hover {
+            background-color: #9b30ff; /* Change this to your desired hover color */
+        }
+
+        #question, #answers, #score, #highscore, #logged_users {
+            margin-top: 20px;
+        }
+
+        #question, #answers {
+            margin-top: 10px;
+            font-size: 1.5rem; /* Increase font size for questions and answers */
+        }
+
+        #message {
+            font-size: 1.5rem; /* Increase font size for the message returned from the server */
+            margin-top: 10px;
+        }
+
+        #timer {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="message"></div>
+        <div id="question"></div>
+        <div id="answers"></div>
+        <div id="timer"></div> <!-- Timer section -->
+        <button class="game-button" onclick="getQuestion()">שְׁאֵלָה הַבָּאָה</button>
+        <button class="game-button" onclick="getScore()">נִקּוּד</button>
+        <button class="game-button" onclick="logout()">להתנתק</button>
+        <div id="score"></div>
+        <div id="highscore"></div>
+        <div id="logged_users"></div>
+    </div>
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
