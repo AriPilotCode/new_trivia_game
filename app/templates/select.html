@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Page</title>
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="pexels-lexx.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            text-align: center;
+        }
+
+        .selection-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            display: block;
+            color: #fff;
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        select:hover {
+            background-color: #0056b3;
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="selection-container">
+        <h1>Select Your Preferences</h1>
+        <form id="selectionForm">
+            <label for="difficulty">Select Difficulty:</label>
+            <select name="difficulty" id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+
+            <label for="category">Select Category:</label>
+            <select name="category" id="category">
+                <option value="General Knowledge">General Knowledge</option>
+                <option value="Books">Books</option>
+                <option value="Film">Film</option>
+                <option value="Music">Music</option>
+                <option value="Musicals & Theatres">Musicals & Theatres</option>
+                <option value="Video Games">Video Games</option>
+                <option value="Board Games">Board Games</option>
+                <option value="Science & Nature">Science & Nature</option>
+                <option value="Computers">Computers</option>
+                <option value="Gadgets">Gadgets</option>
+                <option value="Nature">Nature</option>
+                <option value="Sports">Sports</option>
+                <option value="Geography">Geography</option>
+                <option value="History">History</option>
+                <option value="Politics">Politics</option>
+                <option value="Art">Art</option>
+                <option value="Vehicles">Vehicles</option>
+                <option value="Celebrities">Celebrities</option>
+            </select>
+
+            <input type="submit" value="Start Game" class="submit-button">
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#selectionForm').submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: "{{ url_for('submit_selection') }}",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        difficulty: $('#difficulty').val(),
+                        category: $('#category').val()
+                    }),
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            window.location.href = "{{ url_for('game') }}";
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

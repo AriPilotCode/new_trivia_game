@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5679:5679"
+    environment:
+      - FLASK_ENV=development
+      - QUESTIONS_CACHE_FILE=/app/data/questions_cache.json
+      - QUESTIONS_CACHE_FILE_FOR_NOAM=/app/data/questions_for_noam.json
+    depends_on:
+      - db  # Ensure the db service starts first
+    volumes:
+      - .:/app
+    command: ["/bin/sh", "-c", "sleep 5 && python  /app/app/server_multi_tcp.py"]  # Add a delay before starting the web service
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
